@@ -1,5 +1,5 @@
 <!--Left Sidebar with info Profile -->
-<% include template/header.ejs %>
+<% include ../template/o_header.ejs %>
 
 <div class="sidebar-nav">
     <a href="personal-profile.html" title="Profile">
@@ -139,23 +139,15 @@
             <div class="container-fluid container-posts">
                 <div class="card-post">
                     <!--<ul class="profile-data">-->
-                        <!--<li><b>Username:</b> User</li>-->
-                        <!--<li><b>Age:</b> 26</li>-->
-                        <!--<li><b>Hobbies:</b> trecking and cooking</li>-->
-                        <!--<li><b>Studies:</b> University of World</li>-->
-                        <!--<li><b>Job:</b> Full stack Developer</li>-->
-                        <!--<li><b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>-->
+                    <!--<li><b>Username:</b> User</li>-->
+                    <!--<li><b>Age:</b> 26</li>-->
+                    <!--<li><b>Hobbies:</b> trecking and cooking</li>-->
+                    <!--<li><b>Studies:</b> University of World</li>-->
+                    <!--<li><b>Job:</b> Full stack Developer</li>-->
+                    <!--<li><b>Description:</b> Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</li>-->
                     <!--</ul>-->
                     <!--<p><a href="#" title="edit profile"><i class="fa fa-pencil" aria-hidden="true"></i> Edit profile</a></p>-->
-                    <%
-                    var str = result[0].dob;
-                    var arr = str.split("-").map(function (val) {
-                        return Number(val);
-                    });
-                    var dob = result[0].dob;  var year=arr[0]; var month=arr[1]; var date=arr[2];
-                    console.log(arr);
 
-                    %>
 
                     <form action="/update" method="post">
                         <div class="row">
@@ -256,27 +248,7 @@
                                     </div>
 
                                 </div>
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">Province</label>
-                                    <select id="selectDis" style="width:100%;" class="form-control selectWidth" name="province">
-                                        <option class="" value="" ></option>
-                                        <option class="" value="Southern" <%if(result[0].province==="Southern"){%>selected<%}%> >Southern</option>
-                                        <option class="" value="Western" <%if(result[0].province==="Western"){%>selected<%}%>>Western</option>
-                                        <option class="" value="Eastern" <%if(result[0].province==="Eastern"){%>selected<%}%>>Eastern</option>
-                                        <option class="" value="North" <%if(result[0].province==="North"){%>selected<%}%>>North</option>
-                                    </select>
-                                </div>
 
-                                <div class="form-group">
-                                    <label for="formGroupExampleInput">District</label>
-                                    <select id="selectDis" style="width:100%;" class="form-control selectWidth" name="district">
-                                        <option class="" ></option>
-                                        <option class="" value="Hambanthota" <%if(result[0].district==="Hambanthota"){%>selected<%}%>>Hambanthota</option>
-                                        <option class="" value="Matara" <%if(result[0].district==="Matara"){%>selected<%}%>>Matara</option>
-                                        <option class="" value="Galle" <%if(result[0].district==="Galle"){%>selected<%}%>>Galle</option>
-                                        <option class="" value="Colombo" <%if(result[0].district==="Colombo"){%>selected<%}%>>Colombo</option>
-                                    </select>
-                                </div>
 
                             </div>
 

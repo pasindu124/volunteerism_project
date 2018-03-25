@@ -16,6 +16,7 @@ var MySQLStore = require('express-mysql-session')(session);
 var db = require('./db');
 var index = require('./routes/index');
 var users = require('./routes/users');
+var org = require('./routes/org');
 
 var app = express();
 
@@ -57,17 +58,26 @@ app.use(function (req,res,next) {
     next();
 });
 
+// app.use(function getData(req,res,next) {
+//     console.log("Pasindu is hero!");
+//     next();
+// })
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(expressValidator());
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/org', org);
+
+// app.use(app.router);
+// routes.initialize(app);
 
 passport.use(new LocalStrategy(
     function(username, password, done) {
 
-        console.log(username);
-        console.log(password);
+        //console.log(username);
+        //console.log(password);
 
         db.query("SELECT id,password FROM user WHERE username= ?",[username],function (err,results,fields) {
             if (err) {
@@ -77,11 +87,12 @@ passport.use(new LocalStrategy(
                 done(null,false);
             }else{
                 const hash= results[0].password.toString();
-                console.log(hash);
-
+                //console.log(hash);
+                const id= results[0].id;
                 bcrypt.compare(password,hash,function (err,respond) {
                     if(respond === true){
-                        return done(null, {user_id: results[0].id});
+                        //console.log(id);
+                        return done(null, {user_id: id,log:0});
                     }else{
                         return done(null, false);
 

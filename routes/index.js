@@ -6,6 +6,8 @@ var expressValidator = require('express-validator'); //vaidate
 var passport = require('passport');
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
+
+
 /* GET home page. */
 router.get('/',isAuthent(), function(req, res, next) {
         res.render('index', {title: 'Express'});
@@ -17,16 +19,83 @@ router.get('/signup',isAuthent(), function(req, res, next) {
 });
 
 router.get('/home',isAuthen(), function(req, res, next) {
-    res.render('home', { title: 'Home'});
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+            //console.log(query.sql);
+            if(err) throw err;
+            res.render('home', { title: 'Home',result:result,rows:rows});
+        });
+
+
+    })
+
 
 });
 router.get('/wall',isAuthen(), function(req, res, next) {
-    res.render('wall', { title: 'Wall'});
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+            //console.log(query.sql);
+            if(err) throw err;
+            res.render('wall', { title: 'Wall',result:result,rows:rows});
+
+        });
+
+
+    })
+
 
 });
 
 router.get('/settings',isAuthen(), function(req, res, next) {
-    res.render('settings', { title: 'Settings'});
+
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+            //console.log(query.sql);
+            if(err) throw err;
+            res.render('settings', { title: 'Settings',result:result,rows:rows});
+
+
+        });
+
+    })
+
+
+});
+
+router.get('/profile',isAuthen(), function(req, res, next) {
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+            //console.log(query.sql);
+            if(err) throw err;
+            res.render('profile', { title: 'Profile' ,result:result,rows:rows });
+        });
+
+    })
+
+
+
+});
+
+router.get('/organization',isAuthen(), function(req, res, next) {
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        //console.log(result);
+        var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+            //console.log(query.sql);
+            if(err) throw err;
+            res.render('organization', { title: 'Create Organization' ,result:result ,errors: false,flash:false,rows:rows});
+
+        });
+    })
 
 });
 
@@ -83,9 +152,104 @@ router.post('/signup', function(req,res,next){
 
 });
 
-router.get('/profile',isAuthen(), function(req, res, next) {
-    res.render('profile', { title: 'Profile' });
+router.post('/update',function (req,res,next) {
+    const id = req.user['user_id'];
+
+    const fname=req.body.fname;
+    const lname=req.body.lname;
+    const email=req.body.email;
+    const nic=req.body.nic;
+    const gender=req.body.gender;
+    const address=req.body.address;
+    const city=req.body.city;
+    const mobile=req.body.mobile;
+    const province=req.body.province;
+    const district=req.body.district;
+    const dob= req.body.year +"-"+req.body.month+"-"+req.body.date;
+
+    //console.log(fname+" "+lname+" "+email+" "+nic+" "+gender+" "+address+" "+city+" "+mobile+" "+province+" "+district+" "+dob);
+
+
+    req.checkBody("email","Email is not valid!").isEmail();
+    req.checkBody("nic","NIC number is invalid! eg:95xxxxxxxV").len(0,10);
+    req.checkBody("mobile","Mobile number is invalid! eg:07xxxxxxxx").len(0,10);
+
+    var errors = req.validationErrors();
+    if (errors) {
+        console.log(errors);
+        res.redirect('/profile');
+
+    }else{
+        var query = db.query("UPDATE user SET fname=?,lname=?,email=?,nic=?,address=?,city=?,mobile=?,province=?,district=?,dob=?,gender=? WHERE id=?",[fname,lname,email,nic,address,city,mobile,province,district,dob,gender,id],function (err,result,field) {
+            if(err) throw err;
+            res.redirect('/profile');
+        })
+        //console.log(query.sql);
+    }
 });
+
+router.post('/organization',function (req,res,next) {
+    const id= req.user['user_id'];
+
+    const name= req.body.name;
+    const email= req.body.email;
+    const about= req.body.about;
+
+    req.checkBody("name","Organization name cannot be empty!").notEmpty();
+    req.checkBody("email","You should enter a valid email!").isEmail();
+    req.checkBody("cemail","Email do not match!").equals(req.body.email);
+    req.checkBody("about","Describe your organization little bit!").notEmpty();
+
+    var errors = req.validationErrors();
+
+    //console.log(id+" "+name+" "+email+" "+about);
+
+    if (errors) {
+        console.log(errors);
+        db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+            if(err) throw err;
+            var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+                //console.log(query.sql);
+                if(err) throw err;
+                res.render('organization', { title: 'Create Organization' ,result:result ,errors: errors,flash:false,rows:rows});
+
+
+            });
+        })
+
+    }else{
+        var query1 = db.query("INSERT INTO organization (o_name,o_email,o_about,o_user) VALUES (?,?,?,?)",[name,email,about,id],function (err,result,field) {
+            //console.log(query1.sql);
+            if(err) throw err;
+
+            var query2 = db.query("SELECT LAST_INSERT_ID() as org_id",function (error,results,fields) {
+                //console.log(query2.sql);
+                if(error) throw error;
+                const org_id= results[0].org_id;
+
+                var query3=db.query("INSERT INTO org_admin (u_id,o_id) VALUES (?,?)",[id,org_id],function (err1,result,field) {
+                    //console.log(query3.sql);
+                    if(err1)  throw err1;
+
+
+                })
+            });
+        })
+        db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+            if(err) throw err;
+            var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
+                //console.log(query.sql);
+                if(err) throw err;
+                res.render('organization', { title: 'Create Organization' ,result:result ,errors: errors,flash:"It's done!",rows:rows});
+
+            });
+        })
+
+    }
+
+})
+
+
 
 passport.serializeUser(function(user_id, done) {
     done(null, user_id);
@@ -103,7 +267,11 @@ function isAuthen() {
     // you can do this however you want with whatever variables you set up
     return (req,res,next)=> {
         if (req.isAuthenticated()){
-            return next();
+            if(req.user['log']==0){
+                return next();
+            }else {
+                res.redirect('/org');
+            }
         }
         res.redirect('/');
 
@@ -120,12 +288,40 @@ function isAuthent() {
     return (req,res,next)=> {
         if (!req.isAuthenticated()){
             return next();
+        }else{
+            if(req.user['log']==0){
+                res.redirect('/profile');
+            }else {
+                res.redirect('/org');
+            }
         }
-        res.redirect('/profile');
+
+
 
     }
 
 
     // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 }
+
+function getPages() {
+    var query=  db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ? ",[req.user['user_id']],function (err,rows,field) {
+                if(err) throw err;
+                return rows;
+    });
+}
+
+var getResult = function(id,resu) {
+
+    var query=  db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+                if(err) throw err;
+
+
+
+    })
+    console.log(resu);
+    return resu;
+
+}
+
 module.exports = router;
