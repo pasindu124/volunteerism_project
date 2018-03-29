@@ -19,13 +19,23 @@ router.get('/signup',isAuthent(), function(req, res, next) {
 });
 
 router.get('/home',isAuthen(), function(req, res, next) {
+    var loc=[];
     const id = req.user['user_id'];
     db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
         if(err) throw err;
         var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
             //console.log(query.sql);
             if(err) throw err;
-            res.render('home', { title: 'Home',result:result,rows:rows});
+            var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
+                if(err) throw err;
+                //console.log(query1.sql);
+                for(var i=0;i<evtlocations.length;i++){
+                    loc.push([evtlocations[i].lat,evtlocations[i].lng]);
+                }
+                console.log(loc);
+                res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations});
+
+            });
         });
 
 
