@@ -116,9 +116,10 @@ router.get('/logout',  function(req, res, next) {
 });
 
 router.post('/login', passport.authenticate('local',
-    { successRedirect: '/profile',
+    {   successRedirect: '/profile',
         failureRedirect: '/',
-        failureFlash: true })
+        failureFlash: true }
+        )
 );
 
 
@@ -314,24 +315,5 @@ function isAuthent() {
     // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 }
 
-function getPages() {
-    var query=  db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ? ",[req.user['user_id']],function (err,rows,field) {
-                if(err) throw err;
-                return rows;
-    });
-}
-
-var getResult = function(id,resu) {
-
-    var query=  db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
-                if(err) throw err;
-
-
-
-    })
-    console.log(resu);
-    return resu;
-
-}
 
 module.exports = router;

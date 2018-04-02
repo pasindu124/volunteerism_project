@@ -17,6 +17,7 @@ var db = require('./db');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var org = require('./routes/org');
+var admin = require('./routes/admin');
 
 var app = express();
 
@@ -69,6 +70,7 @@ app.use(expressValidator());
 app.use('/', index);
 app.use('/users', users);
 app.use('/org', org);
+app.use('/admin', admin);
 
 // app.use(app.router);
 // routes.initialize(app);
@@ -79,7 +81,7 @@ passport.use(new LocalStrategy(
         //console.log(username);
         //console.log(password);
 
-        db.query("SELECT id,password FROM user WHERE username= ?",[username],function (err,results,fields) {
+        db.query("SELECT id,password,role FROM user WHERE username= ?",[username],function (err,results,fields) {
             if (err) {
                 throw err;
             }
@@ -89,10 +91,11 @@ passport.use(new LocalStrategy(
                 const hash= results[0].password.toString();
                 //console.log(hash);
                 const id= results[0].id;
+                const role=results[0].role;
                 bcrypt.compare(password,hash,function (err,respond) {
                     if(respond === true){
                         //console.log(id);
-                        return done(null, {user_id: id,log:0});
+                        return done(null, {user_id: id,log:0,role:role});
                     }else{
                         return done(null, false);
 
