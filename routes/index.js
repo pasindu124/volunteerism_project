@@ -19,7 +19,8 @@ router.get('/signup',isAuthent(), function(req, res, next) {
 });
 
 router.get('/home',isAuthen(), function(req, res, next) {
-    var loc=[];
+    var sucess = req.query['sucess'];
+    var errors = req.query['errors'];
     const id = req.user['user_id'];
     db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
         if(err) throw err;
@@ -28,21 +29,39 @@ router.get('/home',isAuthen(), function(req, res, next) {
             if(err) throw err;
             var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
                 if(err) throw err;
-                //console.log(query1.sql);
-                for(var i=0;i<evtlocations.length;i++){
-                    loc.push([evtlocations[i].lat,evtlocations[i].lng]);
+
+                if(errors){
+                    var array = JSON.parse(errors);
+                    res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations,err:array,tab:3,sucess:false});
+
+                }else if(sucess){
+                    res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations,err:false,tab:3,sucess:sucess});
+
                 }
-                console.log(loc);
-                res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations});
+                else{
+                    res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations,err:false,tab:1,sucess:false});
+
+                }
 
             });
         });
 
 
-    })
+    });
 
 
 });
+
+router.get('/eventmap',isAuthen(),function (req,res,next) {
+    const id = req.user['user_id'];
+    var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
+        if(err) throw err;
+
+        res.render('eventmap', { title: 'Home',evtlocations:evtlocations});
+
+    });
+
+})
 router.get('/wall',isAuthen(), function(req, res, next) {
     const id = req.user['user_id'];
     db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
@@ -258,6 +277,48 @@ router.post('/organization',function (req,res,next) {
 
     }
 
+});
+
+router.post('/addEvent',function (req,res,next) {
+    const id= req.user['user_id'];
+
+    var caption = req.body.caption;
+    var date = req.body.date;
+    var address = req.body.address;
+    var city = req.body.city;
+    var zip = req.body.zip;
+    var district =req.body.district;
+    var category = req.body.category;
+    var description = req.body.description;
+    var latitude = req.body.latitude;
+    var longitude = req.body.longitude;
+
+    req.checkBody("caption","Caption cannot be empty!").notEmpty();
+    req.checkBody("date","You should provide a event date!").notEmpty();
+    req.checkBody("address","Address cannot be empty!").notEmpty();
+    req.checkBody("zip","Invalid zip code!").isInt();
+    req.checkBody("description","Please describe your event at least 5 sentences!").isLength({ min: 20 });
+    req.checkBody("latitude","Choose the event location from map!").notEmpty();
+
+    var errors = req.validationErrors();
+
+    if(errors){
+        //console.log(errors);
+        var err= JSON.stringify(errors);
+        var string= "?errors="+err;
+        res.redirect('/home' + string);
+    }else{
+        //console.log(caption+" "+date+" "+address+" "+city+" "+zip+" "+district+" "+category+" "+description+" "+latitude+" "+longitude);
+        var query1 = db.query("INSERT INTO `event` (`lat`, `lng`, `city`, `description`, `event_cat_id`, `caption`, `date`, `address`, `district`, `u_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",[latitude,longitude,city,description,category,caption,date,address,district,id],function (err,result,field) {
+            //console.log(query1.sql);
+            if(err) throw err;
+            var string= "?sucess="+1;
+            res.redirect('/home'+ string);
+
+        });
+
+    }
+
 })
 
 
@@ -272,10 +333,6 @@ passport.deserializeUser(function(user_id, done) {
 });
 
 function isAuthen() {
-    // do any checks you want to in here
-
-    // CHECK THE USER STORED IN SESSION FOR A CUSTOM VARIABLE
-    // you can do this however you want with whatever variables you set up
     return (req,res,next)=> {
         if (req.isAuthenticated()){
             if(req.user['log']==0){

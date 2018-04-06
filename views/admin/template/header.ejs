@@ -23,6 +23,8 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC9cFcpMNt8WjzrVPTwlH4JkLQ62oejvas" type="text/javascript"></script>
+
 </head>
 
 <body class="fix-header fix-sidebar card-no-border">
@@ -84,7 +86,7 @@
                 <!-- ============================================================== -->
                 <ul class="navbar-nav my-lg-0">
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../admin/assets/images/users/1.jpg" alt="user" class="profile-pic m-r-5" />Markarn Doe</a>
+                        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="../../admin/assets/images/users/1.jpg" alt="user" class="profile-pic m-r-5" /><%= result[0].username; %></a>
                     </li>
                 </ul>
             </div>
@@ -107,6 +109,9 @@
                     </li>
                     <li>
                         <a href="/admin/profile" class="waves-effect"><i class="fa fa-user m-r-10" aria-hidden="true"></i>Profile</a>
+                    </li>
+                    <li>
+                        <a href="/admin/events" class="waves-effect"><i class="fa fa-plus-square m-r-10" aria-hidden="true"></i>Events</a>
                     </li>
 
                 </ul>

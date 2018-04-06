@@ -1,0 +1,98 @@
+<% include template/header.ejs %>
+
+        <!-- Page wrapper  -->
+        <!-- ============================================================== -->
+        <div class="page-wrapper">
+            <!-- ============================================================== -->
+            <!-- Container fluid  -->
+            <!-- ============================================================== -->
+            <div class="container-fluid">
+                <!-- ============================================================== -->
+                <!-- Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <div class="row page-titles">
+                    <div class="col-md-6 col-8 align-self-center">
+                        <h3 class="text-themecolor m-b-0 m-t-0">Dashboard</h3>
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+                            <li class="breadcrumb-item active">Dashboard</li>
+                        </ol>
+                    </div>
+                    <div class="col-md-6 col-4 align-self-center">
+                        <a href="https://wrappixel.com/templates/monsteradmin/" class="btn pull-right hidden-sm-down btn-success"> Visit to website</a>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End Bread crumb and right sidebar toggle -->
+                <!-- ============================================================== -->
+                <!-- ============================================================== -->
+                <!-- Start Page Content -->
+                <!-- ============================================================== -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-block">
+                                <div id="map" style="width: 100%; height: 800px;"></div>
+
+                                <script type="text/javascript">//initMap();
+                                    <!--console.log(<%=//evtlocations.length%>);-->
+
+                                    var array =<%- JSON.stringify(evtlocations) %>;
+                                    var locations = [];
+                                    for(var i=0;i<array.length;i++){
+                                        locations.push([array[i].location, array[i].lat, array[i].lng, i]);
+                                    }
+
+
+                                    var map = new google.maps.Map(document.getElementById('map'), {
+                                        zoom: 7.7,
+                                        center: new google.maps.LatLng(7.290572, 80.633726),
+                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                                    });
+
+                                    var infowindow = new google.maps.InfoWindow();
+
+                                    var marker, i;
+
+                                    for (i = 0; i < locations.length; i++) {
+                                        marker = new google.maps.Marker({
+                                            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                                            icon:'/map/blue_MarkerA.png',
+                                            map: map
+                                        });
+
+                                        google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                                            return function() {
+                                                infowindow.setContent(locations[i][0]);
+                                                infowindow.open(map, marker);
+                                            }
+                                        })(marker, i));
+                                    }
+                                </script>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- ============================================================== -->
+                <!-- End PAge Content -->
+                <!-- ============================================================== -->
+            </div>
+            <!-- ============================================================== -->
+            <!-- End Container fluid  -->
+            <!-- ============================================================== -->
+            <!-- ============================================================== -->
+            <!-- footer -->
+            <!-- ============================================================== -->
+            <footer class="footer text-center">
+                © 2017 Monster Admin by wrappixel.com
+            </footer>
+            <!-- ============================================================== -->
+            <!-- End footer -->
+            <!-- ============================================================== -->
+        </div>
+        <!-- ============================================================== -->
+        <!-- End Page wrapper  -->
+        <!-- ============================================================== -->
+
+<% include template/footer.ejs %>

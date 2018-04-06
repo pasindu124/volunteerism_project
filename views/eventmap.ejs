@@ -1,0 +1,54 @@
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="../lib/bootstrap/css/bootstrap.min.css" type="text/css">
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAS9kBWhRR0x40enW7VeKZm4QLwYgTG-Js" type="text/javascript"></script>
+
+</head>
+
+<body>
+    <div id="map" style="width: 100%; height: 800px;"></div>
+
+
+    <script type="text/javascript">
+    var map1;
+    function initAutocomplet() {
+        var array =<%- JSON.stringify(evtlocations) %>;
+        var locations = [];
+        for(var i=0;i<array.length;i++){
+            locations.push([array[i].city, array[i].lat, array[i].lng, i]);
+        }
+
+
+        map1 = new google.maps.Map(document.getElementById('map'), {
+            zoom: 7.9,
+            center: new google.maps.LatLng(7.82, 80.66),
+            mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+        var infowindow = new google.maps.InfoWindow();
+
+        var marker, i;
+
+        for (i = 0; i < locations.length; i++) {
+            marker = new google.maps.Marker({
+                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
+                icon:'/map/blue_MarkerA.png',
+                map: map1
+            });
+
+            google.maps.event.addListener(marker, 'click', (function(marker, i) {
+                return function() {
+                    infowindow.setContent(locations[i][0]);
+                    infowindow.open(map1, marker);
+                }
+            })(marker, i));
+        }
+    }
+
+    initAutocomplet();
+
+</script>
+</body>
+</html>

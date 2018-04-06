@@ -58,41 +58,30 @@ function addAdmin() {
     ajaxRequest.send(null);
 }
 
-function initMap() {
-    //var loce=loc;
-    //console.log(<%=evtlocations%>);
-
-
-    var locations = [
-        ['Jaffna', 9.661498, 80.025547, 1]
-    ];
-    for(var i=0;i<5;i++){
-        //locations.push(['Matara', 5.954920, 80.554956, 5]);
+function addevent() {
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('cevents');
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
     }
-    locations.push(['Matara', 5.954920, 80.554956, 4]);
+    var caption = document.getElementById('caption').value;
+    var date = document.getElementById('date').value;
+    var address = document.getElementById('address').value;
+    var city = document.getElementById('city').value;
+    var zip = document.getElementById('zip').value;
+    var district = document.getElementById('district').value;
+    var category = document.getElementById('category').value;
+    var description = document.getElementById("news_description").value;
+    var latitude = document.getElementById('maps_latitude').value;
+    var longitude = document.getElementById('maps_longitude').value;
 
-    var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 7.7,
-        center: new google.maps.LatLng(7.290572, 80.633726),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
 
-    var infowindow = new google.maps.InfoWindow();
 
-    var marker, i;
-
-    for (i = 0; i < locations.length; i++) {
-        marker = new google.maps.Marker({
-            position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-            icon:'/map/blue_MarkerA.png',
-            map: map
-        });
-
-        google.maps.event.addListener(marker, 'click', (function(marker, i) {
-            return function() {
-                infowindow.setContent(locations[i][0]);
-                infowindow.open(map, marker);
-            }
-        })(marker, i));
-    }
+    var queryString = "?caption="+caption+"&date="+date+"&address="+address+"&city="+city+"&zip="+zip+"&district="+district+"&category="+category+"&description="+description+"&latitude="+latitude+"&longitude="+longitude;
+    ajaxRequest.open("POST", "/addEvent"+queryString , true);
+    ajaxRequest.send(null);
 }
+

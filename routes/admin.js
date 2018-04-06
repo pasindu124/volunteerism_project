@@ -5,10 +5,34 @@ var db = require('../db');
 var expressValidator = require('express-validator');
 
 router.get('/',isAuthen(), function(req, res, next) {
-    res.render('admin/index', {title: 'Express'});
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        res.render('admin/index', {title: 'Admin',result:result});
+
+    });
 });
 router.get('/profile',isAuthen(), function(req, res, next) {
-    res.render('admin/profile', {title: 'Express'});
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        res.render('admin/profile', {title: 'Admin',result:result});
+
+    });
+});
+
+router.get('/events',isAuthen(), function(req, res, next) {
+    const id = req.user['user_id'];
+    db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
+        if(err) throw err;
+        var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
+            if(err) throw err;
+            res.render('admin/events', {title: 'Admin',result:result,evtlocations:evtlocations});
+
+
+        });
+
+    });
 });
 
 

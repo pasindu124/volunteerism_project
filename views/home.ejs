@@ -17,62 +17,29 @@
 
     <!-- Tab Panel -->
     <ul class="nav nav-tabs" role="tablist">
-        <li class="active"><a href="#maps" role="tab" id="mapTab" data-toggle="tab" aria-controls="posts" aria-expanded="true">Map</a></li>
-        <li><a href="#events" role="tab" id="eventsTab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Events</a></li>
+        <li <%if(tab==1){%>class="active"<%}%> ><a href="#maps" role="tab" id="mapTab" data-toggle="tab" aria-controls="posts" aria-expanded="true">Map</a></li>
+        <li <%if(tab==2){%>class="active"<%}%> ><a href="#events" role="tab" id="eventsTab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Events</a></li>
+        <li <%if(tab==3){%>class="active"<%}%> ><a href="#cevents" role="tab" id="eventsTab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Make an event</a></li>
+
     </ul>
 
     <div class="tab-content">
-        <div class="tab-pane fade active in" role="tabpanel" id="maps" aria-labelledby="postsTab">
+        <div <%if(tab==1){%>class="tab-pane fade active in"<%}else{%>class="tab-pane fade" <%}%> role="tabpanel" id="maps" aria-labelledby="postsTab">
             <div class="container-fluid container-posts">
                 <div class="card-post">
                     <h1>Find your favorite event...</h1>
                     <hr>
-                    <div id="map" style="width: 100%; height: 800px;"></div>
+                    <div id="map"  style="width: 100%; height: 800px;">
+                        <iframe src="/eventmap" style="width: 100%;height: 900px">
+                        </iframe>
+                    </div>
 
-
-                    <!--<button type="button" class="btn btn-primary" onclick="initMap()">Primary</button>-->
-
-                    <script type="text/javascript">//initMap();
-                        <!--console.log(<%=//evtlocations.length%>);-->
-
-                        var array =<%- JSON.stringify(evtlocations) %>;
-                        var locations = [];
-                        for(var i=0;i<array.length;i++){
-                            locations.push([array[i].location, array[i].lat, array[i].lng, i]);
-                        }
-
-
-                        var map = new google.maps.Map(document.getElementById('map'), {
-                            zoom: 7.7,
-                            center: new google.maps.LatLng(7.290572, 80.633726),
-                            mapTypeId: google.maps.MapTypeId.ROADMAP
-                        });
-
-                        var infowindow = new google.maps.InfoWindow();
-
-                        var marker, i;
-
-                        for (i = 0; i < locations.length; i++) {
-                            marker = new google.maps.Marker({
-                                position: new google.maps.LatLng(locations[i][1], locations[i][2]),
-                                icon:'/map/blue_MarkerA.png',
-                                map: map
-                            });
-
-                            google.maps.event.addListener(marker, 'click', (function(marker, i) {
-                                return function() {
-                                    infowindow.setContent(locations[i][0]);
-                                    infowindow.open(map, marker);
-                                }
-                            })(marker, i));
-                        }
-                    </script>
 
                 </div>
             </div>
         </div>
 
-        <div class="tab-pane fade" role="tabpanel" id="events" aria-labelledby="postsTab">
+        <div <%if(tab==2){%>class="tab-pane fade active in"<%}else{%>class="tab-pane fade" <%}%> role="tabpanel" id="events" aria-labelledby="postsTab">
             <div class="container-fluid container-posts">
                 <div class="card-post">
                     <h1>Events</h1>
@@ -80,6 +47,270 @@
             </div>
 
         </div>
+
+        <div <%if(tab==3){%>class="tab-pane fade active in"<%}else{%>class="tab-pane fade" <%}%> role="tabpanel" id="cevents" aria-labelledby="postsTab">
+            <div class="container-fluid container-posts">
+                <div class="card-post">
+                    <h1>Make an event</h1>
+                    <div class="row">
+                        <% if(err){%>
+
+                        <%for(var i=0;i<err.length;i++){%>
+                        <div class="alert alert-danger" role="alert">
+                            <%= err[i]['msg'] %>
+                        </div>
+                        <%}%>
+                        <%}else if(sucess){%>
+                        <div class="alert alert-success">
+                            <strong>Success!</strong> Your event has been created.
+                        </div>
+                        <%}%>
+                    </div>
+                    <div>
+                        <!--<form action="javascript:;" onsubmit="addevent()" method="post">-->
+                        <form action="/addEvent" method="post">
+                            <div class="row">
+                                <div class="col-md-8 mb-3">
+                                    <label for="validationDefault01">Caption</label>
+                                    <input type="text" class="form-control" id="caption" placeholder="Caption" name="caption" >
+                                </div>
+                                <div class="col-md-4 mb-3">
+                                    <label for="validationDefault01">Date</label>
+                                    <input type="text" class="form-control datepicker" id="date" name="date" placeholder="Date"  >
+                                    <script>
+                                        $(function(){
+                                            $('.datepicker').datepicker({
+                                                format: 'yyyy-mm-dd',
+                                                startDate: '-3d'
+                                            });
+                                        });
+                                    </script>
+
+                                </div>
+                                <hr>
+                            </div>
+
+                            <br>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="validationDefault03">Location Address</label>
+                                    <input type="text" class="form-control" id="address" placeholder="Address" name="address" >
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="validationDefault04">City</label>
+                                    <input type="text" class="form-control" id="city" placeholder="City" name="city" >
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="validationDefault05">Zip</label>
+                                    <input type="text" class="form-control" id="zip" placeholder="Zip" name="zip" >
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row">
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="formGroupExampleInput">District</label>
+                                    <select id="district" style="width:100%;" class="form-control selectWidth" name="district" name="district">
+                                        <option class="1" value="Hambanthota" selected>Hambanthota</option>
+                                        <option class="2" value="Matara" >Matara</option>
+                                        <option class="3" value="Galle" >Galle</option>
+                                        <option class="4" value="Galle" >Colombo</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-md-6 mb-3">
+                                    <label for="formGroupExampleInput">Category</label>
+                                    <select id="category" style="width:100%;" class="form-control selectWidth" name="category">
+                                        <option class="1" value="1">No Poverty</option>
+                                        <option class="2" value="2" >Zero Hunger</option>
+                                        <option class="3" value="3" >Good Health and Well-being</option>
+                                        <option class="4" value="4" selected>Quality Education</option>
+                                        <option class="5" value="5" >Gender Equality</option>
+
+                                    </select>
+                                </div>
+
+                            </div>
+
+                            <br>
+
+
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <label>Description about the project..</label>		<textarea name="description" id="news_description" class="form-control" rows="16"></textarea>
+                                    <script type="text/javascript" src="ckeditor/ckeditor.js"></script>
+                                    <script type="text/javascript">
+                                        CKEDITOR.replace( 'news_description' );
+                                        CKEDITOR.resize( '100%', '350', true )
+                                    </script>
+                                </div>
+
+
+                            </div>
+
+                            <br>
+
+
+
+                            <br>
+
+                            <div class="row">
+
+                                <div class="col-md-8">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <label>Location of the event</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+
+                                        <div class="form-group">
+                                            <input type="text" class="form-control" id="pac-input" placeholder="Search.." style="margin-top: 7px;width: 60%;">
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div id="map_canvas" style="width: 100%; height: 500px;"></div>
+
+                                            <script type="text/javascript">
+
+                                                var map;
+                                                var markers = [];
+                                                function initAutocomplete() {
+                                                    map = new google.maps.Map(document.getElementById('map_canvas'), {
+                                                        zoom: 7.6,
+                                                        center: new google.maps.LatLng(7.82, 80.66),
+                                                        mapTypeId: google.maps.MapTypeId.ROADMAP
+
+
+                                                    });
+                                                    // Create the search box and link it to the UI element.
+                                                    var input = document.getElementById('pac-input');
+                                                    var searchBox = new google.maps.places.SearchBox(input);
+                                                    map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                                                    // Bias the SearchBox results towards current map's viewport.
+                                                    map.addListener('bounds_changed', function() {
+                                                        searchBox.setBounds(map.getBounds());
+                                                    });
+                                                    // Listen for the event fired when the user selects a prediction and retrieve
+                                                    // more details for that place.
+                                                    searchBox.addListener('places_changed', function() {
+                                                        var places = searchBox.getPlaces();
+
+                                                        if (places.length == 0) {
+                                                            return;
+                                                        }
+
+                                                        // Clear out the old markers.
+                                                        markers.forEach(function(marker) {
+                                                            marker.setMap(null);
+                                                        });
+                                                        //markers = [];
+
+                                                        // For each place, get the icon, name and location.
+                                                        var bounds = new google.maps.LatLngBounds();
+                                                        places.forEach(function(place) {
+                                                            if (!place.geometry) {
+                                                                console.log("Returned place contains no geometry");
+                                                                return;
+                                                            }
+                                                            // Create a marker for each place.
+                                                            markers.push(new google.maps.Marker({
+                                                                map: map,
+                                                                //icon: icon,
+                                                                title: place.name,
+                                                                position: place.geometry.location
+                                                            }));
+                                                            document.getElementById( "maps_latitude" ).value = place.geometry.location.lat();
+                                                            document.getElementById( "maps_longitude" ).value = place.geometry.location.lng();
+
+                                                            if (place.geometry.viewport) {
+                                                                // Only geocodes have viewport.
+                                                                bounds.union(place.geometry.viewport);
+                                                            } else {
+                                                                bounds.extend(place.geometry.location);
+                                                            }
+                                                        });
+                                                        map.fitBounds(bounds);
+                                                    });
+
+                                                    google.maps.event.addListener(map, 'dblclick', function(event) {
+                                                        deleteMarkers();
+                                                        addMarker(event.latLng);
+                                                        document.getElementById( "maps_latitude" ).value = event.latLng.lat();
+                                                        document.getElementById( "maps_longitude" ).value = event.latLng.lng();
+                                                    });
+
+                                                    function addMarker(location) {
+                                                        var marker = new google.maps.Marker({
+                                                            position: location,
+                                                            map: map
+                                                        });
+                                                        markers.push(marker);
+                                                    }
+                                                    function setMapOnAll(map) {
+                                                        for (var i = 0; i < markers.length; i++) {
+                                                            markers[i].setMap(map);
+                                                        }
+                                                    }
+                                                    function showMarkers() {
+                                                        setMapOnAll(map);
+                                                    }
+
+                                                    function deleteMarkers() {
+                                                        clearMarkers();
+                                                        markers = [];
+                                                    }
+                                                    function clearMarkers() {
+                                                        setMapOnAll(null);
+                                                    }
+                                                    var infowindow = new google.maps.InfoWindow();
+                                                }
+
+
+                                            </script>
+                                        </div>
+
+                                    </div>
+
+                                </div>
+                                <div class="col-md-4">
+
+                                    <div class="form-group">
+                                        <label for="formGroupExampleInput">Latitude</label>
+                                        <input type="text" class="form-control" id="maps_latitude" placeholder="" name="latitude" readonly>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="formGroupExampleInput">Longitude</label>
+                                        <input type="text" class="form-control" id="maps_longitude" placeholder="" name="longitude" readonly>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <br>
+
+                            <div class="form-group">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
+                                    <label class="form-check-label" for="invalidCheck2">
+                                        Agree to terms and conditions
+                                    </label>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Submit form</button>
+                        </form>
+                    </div>
+                </div>
+
+
+            </div>
+
+        </div>
+
     </div>
 
 </div>
@@ -92,6 +323,10 @@
         </div>
     </div>
 </div>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBbjfOL2EVxzgZKhyAEsO3H0OLpAL9CJ2I&libraries=places&callback=initAutocomplete"
+        async defer></script>
+
 
 </body>
 
