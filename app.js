@@ -20,7 +20,12 @@ var org = require('./routes/org');
 var admin = require('./routes/admin');
 
 var app = express();
-app.listen(4000, () => console.log('App listening on port 4000!'));
+const PORT = process.env.PORT || 4000;
+app.listen(PORT, () => {
+    console.log(`App listening on port ${PORT}`);
+    console.log('Press Ctrl+C to quit.');
+});
+//app.listen(4000, () => console.log('App listening on port 4000!'));
 require('dotenv').config();
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
