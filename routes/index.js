@@ -4,7 +4,7 @@ var db = require('../db');
 
 var expressValidator = require('express-validator'); //vaidate
 var passport = require('passport');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 const saltRounds = 10;
 
 

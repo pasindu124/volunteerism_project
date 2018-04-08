@@ -6,7 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 var expressValidator = require('express-validator');
-var bcrypt = require('bcrypt');
+var bcrypt = require('bcrypt-nodejs');
 
 var session = require('express-session');
 var passport = require('passport');
@@ -20,7 +20,7 @@ var org = require('./routes/org');
 var admin = require('./routes/admin');
 
 var app = express();
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
     console.log(`App listening on port ${PORT}`);
     console.log('Press Ctrl+C to quit.');
