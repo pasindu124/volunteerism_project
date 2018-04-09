@@ -4,7 +4,7 @@ var db = require('../db');
 
 var expressValidator = require('express-validator'); //vaidate
 var passport = require('passport');
-var bcrypt = require('bcrypt-nodejs');
+var bcrypt = require('bcryptjs');
 const saltRounds = 10;
 
 
@@ -144,12 +144,18 @@ router.post('/login', passport.authenticate('local',
 
 router.post('/signup', function(req,res,next){
     const username = req.body.username;
+    const fname = req.body.fname;
+    const lname = req.body.lname;
+
     const email = req.body.email;
     const password = req.body.password;
     const cpassword = req.body.cpassword;
 
     bcrypt.hash(password, saltRounds, function(err, hash) {
         req.checkBody("username","Username cannot be empty!").notEmpty();
+        req.checkBody("fname","First name cannot be empty!").notEmpty();
+        req.checkBody("lname","Last name cannot be empty!").notEmpty();
+
         req.checkBody("email","Email is not valid!").isEmail();
         req.checkBody("cpassword","Password do not match!").equals(req.body.password);
         req.checkBody("username","Username must be between 4-15 characters long").len(4,15);
@@ -160,7 +166,7 @@ router.post('/signup', function(req,res,next){
             res.render('signup', { title: 'Registration Error', errors:errors });
 
         }else{
-            db.query("INSERT INTO user (username,email,password) VALUES (?,?,?)",[username,email,hash],function (err,result,field) {
+            db.query("INSERT INTO user (username,email,password,fname,lname) VALUES (?,?,?,?,?)",[username,email,hash,fname,lname],function (err,result,field) {
                 if(err) throw err;
 
                 // db.query("SELECT LAST_INSERT_ID() as user_id",function (error,results,fields) {
