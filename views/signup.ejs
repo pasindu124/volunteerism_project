@@ -33,10 +33,45 @@
         </div>
         <%}%>
         <%}%>
-        <input type="text" class="form-control" placeholder="Username" name="username">
+        <input type="text" class="form-control" placeholder="Username" name="username" id="username">
+        <p id="uinfo"></p>
+        <script>
+            $(document).ready(function () {
+                $('#username').blur(function () {
+                    var username=$(this).val();
+                    $.ajax({
+                        url:"/usernameCheck",
+                        method:"POST",
+                        data:{user_name:username},
+                        dataType:"text",
+                        success:function (html) {
+                            $('#uinfo').html(html);
+                        }
+                    })
+                })
+            })
+        </script>
+
         <input type="text" class="form-control" placeholder="First name" name="fname">
         <input type="text" class="form-control" placeholder="Last name" name="lname">
-        <input type="email" class="form-control" placeholder="Email" name="email">
+        <input type="email" class="form-control" placeholder="Email" name="email" id="email">
+        <p id="einfo"></p>
+        <script>
+            $(document).ready(function () {
+                $('#email').blur(function () {
+                    var email=$(this).val();
+                    $.ajax({
+                        url:"/emailCheck",
+                        method:"POST",
+                        data:{email:email},
+                        dataType:"text",
+                        success:function (html) {
+                            $('#einfo').html(html);
+                        }
+                    })
+                })
+            })
+        </script>
         <input type="password" class="form-control" placeholder="Password" name="password">
         <input type="password" class="form-control" placeholder="Confirm Password" name="cpassword">
 

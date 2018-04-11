@@ -58,30 +58,20 @@ function addAdmin() {
     ajaxRequest.send(null);
 }
 
-function addevent() {
-    var ajaxRequest;
-    ajaxRequest=checkBrowser();
-    ajaxRequest.onreadystatechange = function() {
-        if(ajaxRequest.readyState == 4) {
-            var ajaxDisplay = document.getElementById('cevents');
-            ajaxDisplay.innerHTML = ajaxRequest.responseText;
-        }
+function empty() {
+    var x;
+    x = document.getElementById("username").value;
+    y = document.getElementById("password").value;
+    if (x == "" && y=="") {
+        //alert("Enter Username & Password");
+        document.getElementById("uinfo").innerHTML = "<span style=\"color:red;font-weight:bold\">Enter your username here!</span>";
+        document.getElementById("pinfo").innerHTML = "<span style=\"color:red;font-weight:bold\">Enter your password here!</span>";
+        return false;
+    }else if (x == ""){
+        document.getElementById("uinfo").innerHTML = "<span style=\"color:red;font-weight:bold\">Enter your username here!</span>";
+        return false;
+    }else if(y == ""){
+        document.getElementById("pinfo").innerHTML = "<span style=\"color:red;font-weight:bold\">Enter your password here!</span>";
+        return false;
     }
-    var caption = document.getElementById('caption').value;
-    var date = document.getElementById('date').value;
-    var address = document.getElementById('address').value;
-    var city = document.getElementById('city').value;
-    var zip = document.getElementById('zip').value;
-    var district = document.getElementById('district').value;
-    var category = document.getElementById('category').value;
-    var description = document.getElementById("news_description").value;
-    var latitude = document.getElementById('maps_latitude').value;
-    var longitude = document.getElementById('maps_longitude').value;
-
-
-
-    var queryString = "?caption="+caption+"&date="+date+"&address="+address+"&city="+city+"&zip="+zip+"&district="+district+"&category="+category+"&description="+description+"&latitude="+latitude+"&longitude="+longitude;
-    ajaxRequest.open("POST", "/addEvent"+queryString , true);
-    ajaxRequest.send(null);
 }
-

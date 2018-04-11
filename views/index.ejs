@@ -10,6 +10,8 @@
   <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" type="text/css">
   <script src="lib/jquery-3.2.0.min.js"></script>
   <script src="lib/bootstrap/js/bootstrap.min.js"></script>
+  <script src="myscript.js"></script>
+
   <link rel="stylesheet" href="lib/font-awesome/css/font-awesome.min.css">
   <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css" type="text/css">
@@ -21,10 +23,12 @@
     <p class="text-center"><img src="img/logo.png" alt="logo"></p>
   </div>
   <form action="/login" method="post">
-    <input type="text" class="form-control" placeholder="Username" name="username">
-    <input type="password" class="form-control" placeholder="Password" name="password">
+    <input type="text" class="form-control" placeholder="Username" name="username" id="username">
+    <p id="uinfo"></p>
+    <input type="password" class="form-control" placeholder="Password" name="password" id="password">
+    <p id="pinfo"></p>
     <input type="checkbox"> Save Password
-    <input type="submit" class="btn btn-social" value="LOGIN">
+    <input type="submit" class="btn btn-social" value="LOGIN" onClick="return empty()">
   </form>
   <a href="#" class="login-action" title="Forgot password">
     <p>Forgot your password?</p>

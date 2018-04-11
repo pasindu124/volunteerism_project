@@ -135,7 +135,8 @@ router.get('/logout',  function(req, res, next) {
 });
 
 router.post('/login', passport.authenticate('local',
-    {   successRedirect: '/profile',
+    {
+        successRedirect: '/home',
         failureRedirect: '/',
         failureFlash: true }
         )
@@ -187,6 +188,49 @@ router.post('/signup', function(req,res,next){
 
 
 });
+
+router.post('/usernameCheck',function (req,res,next) {
+    var uname = req.body.user_name;
+    //console.log(uname.length);
+    db.query("SELECT * FROM user WHERE username=? ",[uname],function (err,result,field) {
+        if(err) throw err;
+        if (uname.length<5){
+            var str = "<span style=\"color:red;font-weight:bold\">username is too short</span>";
+        }
+        else if(result.length==0){
+            var str = "<span style=\"color:greenyellow;font-weight:bold\">username is avalable!</span>";
+
+        }else if(result.length>0){
+            var str = "<span style=\"color:red;font-weight:bold\">username is not avalable!</span>";
+
+        }
+        res.send(str);
+
+
+    });
+});
+router.post('/emailCheck',function (req,res,next) {
+    var email = req.body.email;
+    req.checkBody("email","Email is not valid!").isEmail();
+    var errors = req.validationErrors();
+
+    db.query("SELECT * FROM user WHERE email=? ",[email],function (err,result,field) {
+        if(err) throw err;
+        if (errors){
+            var str = "<span style=\"color:red;font-weight:bold\">email is not valid</span>";
+        }
+        else if(result.length==0){
+            var str = "<span style=\"color:greenyellow;font-weight:bold\">email is avalable!</span>";
+
+        }else if(result.length>0){
+            var str = "<span style=\"color:red;font-weight:bold\">this email already have an account!</span>";
+
+        }
+        res.send(str);
+
+
+    });
+})
 
 router.post('/update',function (req,res,next) {
     const id = req.user['user_id'];

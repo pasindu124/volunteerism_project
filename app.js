@@ -83,8 +83,8 @@ app.use('/admin', admin);
 passport.use(new LocalStrategy(
     function(username, password, done) {
 
-        //console.log(username);
-        //console.log(password);
+        console.log(username);
+        console.log(password);
 
         db.query("SELECT id,password,role FROM user WHERE username= ?",[username],function (err,results,fields) {
             if (err) {

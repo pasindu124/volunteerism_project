@@ -133,3 +133,71 @@
             </span>
     </div>
 </header>
+
+<div class="sidebar-nav">
+    <button type="button" class="btn btn-default" style="border: none;" title="Click to change" data-toggle="modal" data-target="#myModal">
+        <img src="img/user.jpg" alt="User name" class="img-circle img-user">
+
+    </button>
+
+    <!-- Modal -->
+
+    <h2 class="text-center hidden-xs"><a href="personal-profile.html" title="Profile"><%= result[0].username; %></a></h2>
+    <p class="text-center user-description hidden-xs">
+        <i>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</i>
+    </p>
+</div>
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="col-md-12">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">Update Profile Picture</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <img src="/img/user.jpg" class="img-rounded" align="middle" alt="Cinque Terre" style="width: 250px;height: 250px;">
+                        </div>
+                    </div>
+                    <br>
+                    <div class="row">
+                        <div class="col-md-12 " >
+                            <form>
+                                <div class="form-group">
+                                <span class="btn btn-default btn-file">
+                                    Browse <input type="file" accept="image/*">
+                                </span>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <script>
+                        $(document).on('change', ':file', function() {
+                            var input = $(this),
+                                numFiles = input.get(0).files ? input.get(0).files.length : 1,
+                                label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+                            input.trigger('fileselect', [numFiles, label]);
+                        });
+                        $(document).ready( function() {
+                            $(':file').on('fileselect', function(event, numFiles, label) {
+                                console.log(numFiles);
+                                console.log(label);
+                            });
+                        });
+                    </script>
+
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+
+</div>
