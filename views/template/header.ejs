@@ -12,6 +12,7 @@
     <script src="../lib/jquery-3.2.0.min.js"></script>
     <script src="../lib/bootstrap/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="../lib/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.10/css/all.css" integrity="sha384-+d0P83n9kaQMCwj8F4RJB66tzIwOKmrdb46+porD/OvrJ+37WqIM7UoBtwHO6Nlg" crossorigin="anonymous">
     <link rel="stylesheet" href="../lib/bootstrap-switch/css/bootstrap-switch.min.css">
     <script src="../lib/bootstrap-switch/js/bootstrap-switch.min.js"></script>
     <script src="../twemoji.min.js"></script>
@@ -43,12 +44,32 @@
                 </span>
             <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownSettings">
                 <li>
-                    <a href="/organization" title="Settings">
+                    <a href="/organization" title="Organizations">
                         <div class="col-xs-4">
                             <i class="fa fa-sitemap" aria-hidden="true"></i>
                         </div>
                         <div class="col-xs-8 text-left">
                             <span>Organizations</span>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#/organization" title="Volunteering Help">
+                        <div class="col-xs-4">
+                            <i class="fa fa-hands-helping" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-xs-8 text-left">
+                            <span>VHelp</span>
+                        </div>
+                    </a>
+                </li>
+                <li>
+                    <a href="#/organization" title="Opportunity">
+                        <div class="col-xs-4">
+                            <i class="fab fa-black-tie fa-lg" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-xs-8 text-left">
+                            <span>Opportunity</span>
                         </div>
                     </a>
                 </li>
@@ -68,14 +89,14 @@
                             <i class="fa fa-question" aria-hidden="true"></i>
                         </div>
                         <div class="col-xs-8 text-left">
-                            <span>FAQ</span>
+                            <span>About Us</span>
                         </div>
                     </a>
                 </li>
                 <li>
                     <a href="/logout" title="Settings">
                         <div class="col-xs-4">
-                            <i class="fa fa-sign-out" aria-hidden="true"></i>
+                            <i class="fa fa-sign-out-alt" aria-hidden="true"></i>
                         </div>
                         <div class="col-xs-8 text-left">
                             <span>Logout</span>
@@ -104,7 +125,7 @@
     </div>
     <div class="second-icon dropdown menu-icon">
             <span class="dropdown-toggle" role="button" id="dropdownNotification" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-        <span class="hidden-xs hidden-sm">Notifications</span> <i class="fa fa-bell-o" aria-hidden="true"></i> <span class="badge">2</span>
+        <span class="hidden-xs hidden-sm">Notifications</span> <i class="far fa-bell fa-1x" aria-hidden="true"></i> <span class="badge">2</span>
             </span>
         <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownNotification">
             <li class="new-not">
@@ -136,7 +157,7 @@
 
 <div class="sidebar-nav">
     <button type="button" class="btn btn-default" style="border: none;" title="Click to change" data-toggle="modal" data-target="#myModal">
-        <img src="img/user.jpg" alt="User name" class="img-circle img-user">
+        <img src="/uploads/<%= result[0].id;%>/profile_pic.jpg" alt="User name" class="img-circle img-user" style="width: 100%;height: 100%;">
 
     </button>
 
@@ -158,24 +179,34 @@
                     <h4 class="modal-title">Update Profile Picture</h4>
                 </div>
                 <div class="modal-body">
+                    <form action="/changePP" method="post" enctype="multipart/form-data" >
                     <div class="row">
-                        <div class="col-md-12 ">
-                            <img src="/img/user.jpg" class="img-rounded" align="middle" alt="Cinque Terre" style="width: 250px;height: 250px;">
+                        <div class="col-md-6">
+                            <img src="/uploads/<%= result[0].id;%>/profile_pic.jpg" class="img-rounded" align="middle" alt="Cinque Terre" style="width: 250px;height: 250px;">
+                        </div>
+                        <div class="col-md-6">
+                            <div class="imageUploadedOrNot">
+                                <h2>Preview</h2>
+                                <img src="#" alt="" id="blankImg">
+                            </div>
+
                         </div>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-12 " >
-                            <form>
+
                                 <div class="form-group">
                                 <span class="btn btn-default btn-file">
-                                    Browse <input type="file" accept="image/*">
+                                    Browse <input name="profilepicture" id="profilepicture" type="file" accept="image/*">
                                 </span>
                                 </div>
-                            </form>
+                                <button type="submit" class="btn btn-secondary">UPLOAD</button>
+
                         </div>
                     </div>
-                    <script>
+                    </form>
+                    <script type="text/javascript">
                         $(document).on('change', ':file', function() {
                             var input = $(this),
                                 numFiles = input.get(0).files ? input.get(0).files.length : 1,
@@ -187,6 +218,18 @@
                                 console.log(numFiles);
                                 console.log(label);
                             });
+                        });
+
+                        $(function(){
+                            $("#profilepicture").change(function() {
+                                //console.log(this.files);
+                                var reader = new FileReader();
+                                reader.onload = function(image){
+                                    $(".imageUploadedOrNot").show(0);
+                                    $("#blankImg").attr('src',image.target.result);
+                                }
+                                reader.readAsDataURL(this.files[0]);
+                            })
                         });
                     </script>
 

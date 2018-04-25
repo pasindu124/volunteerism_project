@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var db = require('../db');
+var multer  = require('multer');
+var path = require('path');
+var fs = require('fs-extra');
 
 var expressValidator = require('express-validator'); //vaidate
 var passport = require('passport');
@@ -170,17 +173,23 @@ router.post('/signup', function(req,res,next){
             db.query("INSERT INTO user (username,email,password,fname,lname) VALUES (?,?,?,?,?)",[username,email,hash,fname,lname],function (err,result,field) {
                 if(err) throw err;
 
-                // db.query("SELECT LAST_INSERT_ID() as user_id",function (error,results,fields) {
-                //     if(error) throw error;
-                //     const user_id= results[0];
-                //     console.log(user_id);
-                //     req.login(user_id,function (err) {
-                //         res.redirect('/profile')
-                //     })
-                // });
+                db.query("SELECT LAST_INSERT_ID() as user_id",function (error,results,fields) {
+                    if(error) throw error;
+                    const user_id= results[0].user_id;
+                    console.log(user_id);
+                    var dir = 'public/uploads/'+user_id;
+                    if (!fs.existsSync(dir)){
+                        fs.mkdirSync(dir);
+                    }
+                    // fs.copy('public/uploads/profile_pic.jpg', dir, err => {
+                    //     if (err) return console.error(err)
+                    //
+                    //     console.log('success!');
+                    // });
+                });
 
                 res.render('index', { title: 'Registration Complete' });
-            })
+            });
         }
 
 
@@ -369,8 +378,7 @@ router.post('/addEvent',function (req,res,next) {
 
     }
 
-})
-
+});
 
 
 passport.serializeUser(function(user_id, done) {
@@ -408,7 +416,7 @@ function isAuthent() {
             return next();
         }else{
             if(req.user['log']==0){
-                res.redirect('/profile');
+                res.redirect('/home');
             }else {
                 res.redirect('/org');
             }
@@ -421,6 +429,42 @@ function isAuthent() {
 
     // IF A USER ISN'T LOGGED IN, THEN REDIRECT THEM SOMEWHERE
 }
+
+
+
+
+router.post('/changePP', function (req, res) {
+    const id= req.user['user_id'];
+    var dir = 'public/uploads/'+id;
+
+    var storage = multer.diskStorage({
+
+        destination: function (req, file, cb) {
+            cb(null, dir)
+        },
+        filename: function (req, file, cb) {
+            cb(null, "profile_pic.jpg")
+                //path.extname(file.originalname))
+        }
+    })
+
+    var upload = multer({ storage: storage }).single('profilepicture');
+
+    upload(req, res, function (err) {
+        if (err) {
+            throw err;
+
+        }else{
+            res.redirect('/profile');
+        }
+
+
+    });
+
+});
+
+
+
 
 
 module.exports = router;

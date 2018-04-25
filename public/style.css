@@ -120,6 +120,7 @@ header, header a, header a:link, header a:visited, header a:focus {
 header .search {
     float: left;
     margin: 0px;
+    margin-left: -100px;
 }
 
 header .fa {
@@ -578,4 +579,10 @@ footer.login-footer {
     cursor: inherit;
     display: block;
 
+}
+
+.eventcard{
+    width: 25rem;
+    border-style: groove;
+    margin: 10px;
 }
