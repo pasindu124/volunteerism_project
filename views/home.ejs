@@ -30,121 +30,67 @@
         </div>
 
         <div <%if(tab==2){%>class="tab-pane fade active in"<%}else{%>class="tab-pane fade" <%}%> role="tabpanel" id="events" aria-labelledby="postsTab">
-            <div class="container-fluid container-posts">
-                <div class="card-post">
-                    <h1>Events</h1>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="card eventcard">
-                                <img class="card-img-top" src="https://secureservercdn.net/000.9d5.godaddywp.com/wp-content/uploads/2017/01/dead-tree-1.jpg" alt="Card image cap">
 
-                                <div class="card-body">
-
-                                    <div align="center">
-                                        <h5 class="card-title"><b>Card title</b></h5>
-
-                                        <p class="card-text">
-                                        <p>Date : 2018-04-28</p>
-                                        <p>Time : 9.00AM</p>
-
-                                        </p>
-                                        <p id="morecard"></p>
-
-                                        <a href="#" onclick="" data-toggle="collapse" data-target="#demo"><i class="fa fa-angle-down"></i></a>
-
-                                        <div id="demo" class="collapse">
-                                            <button type="button" class="btn btn-outline-primary" style="margin: 10px;">VIEW</button>
-                                            <div class="row" >
-                                                <div class="col-md-12">
-                                                    <div align="center" style="margin: 10px;">
-                                                        <button type="button" style="background-color: #3b5998" class="btn btn-default btn-circle"><i class="fab fa-facebook-f"></i></button>
-                                                        <button type="button" style="background-color: #0e76a8" class="btn btn-default btn-circle"><i class="fab fa-linkedin-in"></i></i></button>
-                                                        <button type="button" style="background-color: #4c68d7" class="btn btn-default btn-circle"><i class="fab fa-instagram"></i></button>
-                                                        <style>
-                                                            .btn-circle {
-                                                                width: 50px;
-                                                                height: 50px;
-                                                                padding: 10px 16px;
-                                                                font-size: 18px;
-                                                                line-height: 1.33;
-                                                                border-radius: 25px;
-                                                            }
-                                                        </style>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
-
+            <%for(var i=0;i<evtlocations.length;i++){%>
+                <div id="posts-container" class="container-fluid container-posts">
+                    <div class="card-post">
+                        <div class="row">
+                            <div class="col-xs-3 col-sm-2">
+                                <a href="personal-profile.html" title="Profile">
+                                    <img src="<%=evtlocations[i].image%>" alt="User name" class="img-circle img-user">
+                                </a>
                             </div>
-                            <div class="card eventcard">
-                                <img class="card-img-top" src="https://secureservercdn.net/000.9d5.godaddywp.com/wp-content/uploads/2017/01/dead-tree-1.jpg" alt="Card image cap">
-
-                                <div class="card-body">
-
-                                    <div align="center">
-                                        <h5 class="card-title"><b>Card title</b></h5>
-
-                                        <p class="card-text">
-                                        <p>Date : 2018-04-28</p>
-                                        <p>Time : 9.00AM</p>
-
-                                        </p>
-                                        <p id="morecard"></p>
-
-                                        <a href="#" onclick="" data-toggle="collapse" data-target="#demo"><i class="fa fa-angle-down"></i></a>
-
-                                        <div id="demo" class="collapse">
-                                            <button type="button" class="btn btn-outline-primary" style="margin: 10px;">VIEW</button>
-                                            <div class="row" >
-                                                <div class="col-md-12">
-                                                    <div align="center" style="margin: 10px;">
-                                                        <button type="button" style="background-color: #3b5998" class="btn btn-default btn-circle"><i class="fab fa-facebook-f"></i></button>
-                                                        <button type="button" style="background-color: #0e76a8" class="btn btn-default btn-circle"><i class="fab fa-linkedin-in"></i></i></button>
-                                                        <button type="button" style="background-color: #4c68d7" class="btn btn-default btn-circle"><i class="fab fa-instagram"></i></button>
-                                                        <style>
-                                                            .btn-circle {
-                                                                width: 50px;
-                                                                height: 50px;
-                                                                padding: 10px 16px;
-                                                                font-size: 18px;
-                                                                line-height: 1.33;
-                                                                border-radius: 25px;
-                                                            }
-                                                        </style>
-                                                    </div>
-                                                </div>
-
-
-                                            </div>
-                                        </div>
-                                    </div>
-
-
-
-                                </div>
+                            <div class="col-xs-9 col-sm-10 info-user">
+                                <h3><a href="personal-profile.html" title="Profile"><%= evtlocations[i].username %> </a></h3>
+                                <p><i>2h</i></p>
 
                             </div>
 
-
                         </div>
-                        <div class="col-md-4">
-
-
-                        </div>
-                        <div class="col-md-4">
-                            <
-
+                        <div class="row">
+                            <div class="col-sm-8 col-sm-offset-2 data-post">
+                                <p class="h2"><%= evtlocations[i].caption %></p>
+                                <p> Date : <%= evtlocations[i].date %> </p>
+                                <p> Time : 21:20</p>
+                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal<%= evtlocations[i].e_id %>">View Event</button>
+                                <div class="reaction">
+                                    &#x2764; 156 &#x1F603; 54
+                                </div>
+                                <div class="comments">
+                                    <div class="more-comments">View more comments</div>
+                                    <ul>
+                                        <li><b>User1</b> Lorem Ipsum Dolor si amet</li>
+                                        <li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>
+                                    </ul>
+                                    <form>
+                                        <input type="text" class="form-control" placeholder="Add a comment">
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="modal fade" id="eventModal<%= evtlocations[i].e_id %>" role="dialog">
+                <div class="modal-dialog">
+
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title"><%= evtlocations[i].caption %></h4>
+                        </div>
+                        <div class="modal-body">
+                            <p>Some text in the modal.lorem</p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+
+                </div>
             </div>
+
+            <%}%>
 
         </div>
 

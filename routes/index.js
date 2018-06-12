@@ -13,7 +13,7 @@ const saltRounds = 10;
 
 /* GET home page. */
 router.get('/',isAuthent(), function(req, res, next) {
-        res.render('index', {title: 'Express'});
+        res.render('index', {title: 'Pasindu'});
 });
 
 router.get('/signup',isAuthent(), function(req, res, next) {
@@ -30,7 +30,7 @@ router.get('/home',isAuthen(), function(req, res, next) {
         var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
             //console.log(query.sql);
             if(err) throw err;
-            var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
+            var query1=db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1;",function (err,evtlocations,field) {
                 if(err) throw err;
 
                 if(errors){
@@ -39,7 +39,6 @@ router.get('/home',isAuthen(), function(req, res, next) {
 
                 }else if(sucess){
                     res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations,err:false,tab:3,sucess:sucess});
-
                 }
                 else{
                     res.render('home', { title: 'Home',result:result,rows:rows,evtlocations:evtlocations,err:false,tab:1,sucess:false});
@@ -55,9 +54,11 @@ router.get('/home',isAuthen(), function(req, res, next) {
 
 });
 
+
+
 router.get('/eventmap',isAuthen(),function (req,res,next) {
     const id = req.user['user_id'];
-    var query1=db.query("SELECT * FROM event",function (err,evtlocations,field) {
+    var query1=db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1;",function (err,evtlocations,field) {
         if(err) throw err;
 
         res.render('eventmap', { title: 'Home',evtlocations:evtlocations});
@@ -75,11 +76,7 @@ router.get('/wall',isAuthen(), function(req, res, next) {
             res.render('wall', { title: 'Wall',result:result,rows:rows});
 
         });
-
-
     })
-
-
 });
 
 router.get('/settings',isAuthen(), function(req, res, next) {
@@ -455,7 +452,12 @@ router.post('/changePP', function (req, res) {
             throw err;
 
         }else{
-            res.redirect('/profile');
+            var query2 = db.query("UPDATE `user` SET `image` = CONCAT('/uploads/',?,'/profile_pic.jpg') WHERE `user`.`id` = ?;",[id,id],function (error,results,fields) {
+                //console.log(query2.sql);
+                if (error) throw error;
+                res.redirect('/profile');
+
+            });
         }
 
 

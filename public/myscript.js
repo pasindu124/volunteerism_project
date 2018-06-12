@@ -75,3 +75,34 @@ function empty() {
         return false;
     }
 }
+
+function approveEvent(eid) {
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('cutcp');
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?eid="+eid;
+    ajaxRequest.open("GET", "/admin/approveEvent" + queryString  , true);
+    ajaxRequest.send(null);
+}
+function deleteEvent(eid) {
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('cutcp');
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?eid="+eid;
+    ajaxRequest.open("GET", "/admin/deleteEvent" + queryString  , true);
+    ajaxRequest.send(null);
+}

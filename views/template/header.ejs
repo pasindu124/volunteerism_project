@@ -28,6 +28,10 @@
     <link rel="stylesheet" href="../datepicker/css/bootstrap-datepicker3.css" type="text/css">
     <script src="../datepicker/js/bootstrap-datepicker.js"></script>
     <link rel="stylesheet" href="../style.css" type="text/css">
+
+
+
+
 </head>
 
 <body id="personal">
@@ -157,7 +161,7 @@
 
 <div class="sidebar-nav">
     <button type="button" class="btn btn-default" style="border: none;" title="Click to change" data-toggle="modal" data-target="#myModal">
-        <img src="/uploads/<%= result[0].id;%>/profile_pic.jpg" alt="User name" class="img-circle img-user" style="width: 100%;height: 100%;">
+        <img src="<%=result[0].image;%>" alt="User name" class="img-circle img-user" style="width: 100%;height: 100%;">
 
     </button>
 
@@ -182,7 +186,8 @@
                     <form action="/changePP" method="post" enctype="multipart/form-data" >
                     <div class="row">
                         <div class="col-md-6">
-                            <img src="/uploads/<%= result[0].id;%>/profile_pic.jpg" class="img-rounded" align="middle" alt="Cinque Terre" style="width: 250px;height: 250px;">
+
+                            <img src="<%=result[0].image;%>" class="img-rounded" align="middle" alt="Cinque Terre" style="width: 250px;height: 250px;">
                         </div>
                         <div class="col-md-6">
                             <div class="imageUploadedOrNot">
