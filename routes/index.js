@@ -34,23 +34,7 @@ router.get('/home',isAuthen(), function(req, res, next) {
             var query1=db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1;",function (err,evtlocations,field) {
                 if(err) throw err;
 
-                async function getComments(evtlocations) {
-                    var comments =[];
-                    for (var i=0;i<evtlocations.length;i++){
-                        db.query("SELECT * FROM `comment` LEFT JOIN user ON comment.com_uid=user.id WHERE `com_eid`=? AND comment.c_status=1 ORDER BY `comment`.`com_id` DESC",[evtlocations[i].e_id],function (err,comment,field) {
-                            if (err) throw err;
 
-                            comments.push(comment);
-
-                        });
-                    }
-                    console.log(comments);
-                    return comments;
-                }
-
-                getComments(evtlocations).then(comments => {
-                    console.log(comments);
-                })
 
 
 
@@ -128,7 +112,14 @@ router.get('/profile',isAuthen(), function(req, res, next) {
         var query = db.query("SELECT * FROM `organization` WHERE `o_id` IN (SELECT `o_id` FROM org_admin WHERE u_id = ?) ",[id],function (err,rows,field) {
             //console.log(query.sql);
             if(err) throw err;
-            res.render('profile', { title: 'Profile' ,result:result,rows:rows });
+
+            var query2 = db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1 AND event.u_id=?;",[id],function (err,eventinfo,field) {
+                if(err) throw err;
+                console.log(query2.sql)
+                res.render('profile', { title: 'Profile' ,result:result,rows:rows,eventinfo:eventinfo });
+
+
+            })
         });
 
     })
@@ -404,17 +395,27 @@ router.post('/addEvent',function (req,res,next) {
 router.get('/contribute',function (req,res,next) {
     var eid = req.query['eid'];
     var uid = req.user['user_id'];
-    db.query('INSERT INTO `contribute` (`c_uid`, `c_eid`) VALUES ( ? , ?)',[uid,eid],function (error,result,field) {
-        if(error) throw error;
-        db.query('UPDATE `event` SET `contributers` = `contributers`+1 WHERE `event`.`e_id` = ?',[eid],function (err,result1,field1) {
-            if(err) throw err;
-            db.query('SELECT `contributers` FROM `event` WHERE `e_id`=?',[eid],function (error,result2,field3) {
+    var query1= db.query('SELECT * FROM `contribute` WHERE `c_uid` = ? AND `c_eid`=?',[uid,eid],function (err,read,field) {
+        console.log(query1.sql);
+        if(err) throw err;
+        if(read.length>0){
+            return false;
+        }else{
+            db.query('INSERT INTO `contribute` (`c_uid`, `c_eid`) VALUES ( ? , ?)',[uid,eid],function (error,result,field) {
                 if(error) throw error;
-                res.send(JSON.stringify(result2[0].contributers))
-            })
-        })
+                db.query('UPDATE `event` SET `contributers` = `contributers`+1 WHERE `event`.`e_id` = ?',[eid],function (err,result1,field1) {
+                    if(err) throw err;
+                    db.query('SELECT `contributers` FROM `event` WHERE `e_id`=?',[eid],function (error,result2,field3) {
+                        if(error) throw error;
+                        res.send(JSON.stringify(result2[0].contributers))
+                    })
+                })
 
-    })
+            })
+
+        }
+    });
+
 });
 
 router.get('/contributers',function (req,res,next) {
@@ -424,6 +425,17 @@ router.get('/contributers',function (req,res,next) {
         if(err) throw err;
 
         res.render('contributers',{title: eid,contributers:result})
+
+    })
+});
+
+router.get('/contributers_profile',function (req,res,next) {
+    var eid= req.query['eid'];
+    //console.log(eid);
+    db.query('SELECT * FROM `contribute` LEFT JOIN user ON contribute.c_uid= user.id WHERE contribute.c_eid=?',[eid],function (err,result,field) {
+        if(err) throw err;
+
+        res.render('contributers_profile',{title: eid,contributers:result})
 
     })
 });
@@ -456,6 +468,47 @@ router.get('/showComment',function (req,res,next) {
         res.render('comments',{comments:result1})
 
     })
+
+})
+
+router.get('/rating',function (req,res,next) {
+    var cid = req.query['cid'];
+    var id = req.query['id'];
+    //console.log(cid);
+    db.query('SELECT * FROM `contribute` WHERE c_id=? AND status=1',[cid],function (err,result,field) {
+        if(err) throw err;
+        if(result.length>0){
+            db.query('SELECT * FROM `contribute` WHERE c_id=? AND status=1',[cid],function (err,row,field) {
+                if (err) throw err;
+
+                res.render('rating_afterfeedback',{result:row})
+
+            })
+        }else {
+            res.render('rating',{cid:cid,id:id})
+
+        }
+    })
+
+
+})
+
+router.get('/leavefeedback',function (req,res,next) {
+    var value = req.query['value'];
+    var comment = req.query['comment'];
+    var cid = req.query['cid'];
+    console.log(req.query);
+    db.query('UPDATE `contribute` SET `feedback` = ?,value = ?,status = 1 WHERE `contribute`.`c_id` = ?;',[comment,value,cid],function (err,result,field) {
+        if(err) throw err;
+        db.query('SELECT * FROM `contribute` WHERE c_id=? AND status=1',[cid],function (err,row,field) {
+            if (err) throw err;
+
+            res.render('rating_afterfeedback',{result:row})
+
+        })
+
+    })
+
 
 })
 

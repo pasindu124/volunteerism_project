@@ -93,6 +93,23 @@ function contributers(id) {
     ajaxRequest.send(null);
 }
 
+function contributers_profile(id) {
+    var event_id = id;
+    //console.log(id);
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('conModel'+event_id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?eid="+event_id;
+    ajaxRequest.open("GET", "/contributers_profile" +queryString , true);
+    ajaxRequest.send(null);
+}
+
 function addComment(com,eid) {
     var comment = com;
     var event_id = eid;
@@ -180,3 +197,62 @@ function deleteEvent(eid) {
     ajaxRequest.open("GET", "/admin/deleteEvent" + queryString  , true);
     ajaxRequest.send(null);
 }
+function rating(id,length,cid) {
+    //console.log(cid)
+    for (var i=0;i<length;i++){
+        var htmlview = document.getElementById('rating'+i);
+        htmlview.innerHTML = null;
+    }
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('rating'+id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?cid="+cid+"&id="+id;
+    ajaxRequest.open("GET", "/rating"+queryString, true);
+    ajaxRequest.send(null);
+}
+
+function leavefeedback(cid,id) {
+    var cid= cid;
+    var radios = document.getElementsByName('rating');
+    var value;
+    for (var i = 0, length = radios.length; i < length; i++)
+    {
+        if (radios[i].checked)
+        {
+            // do whatever you want with the checked radio
+            value = radios[i].value;
+
+            // only one radio can be logically checked, don't check the rest
+            break;
+        }
+    }
+    var comment = document.getElementById('feedbackcomment').value;
+    //console.log(comment+" "+value+" "+cid+" "+id);
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('rating'+id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?cid="+cid+"&value="+value+"&comment="+comment;
+    ajaxRequest.open("GET", "/leavefeedback"+queryString, true);
+    ajaxRequest.send(null);
+
+
+
+
+}
+
+
+

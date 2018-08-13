@@ -1,0 +1,47 @@
+
+<div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Contributers</h4>
+        </div>
+        <div class="modal-body">
+            <%for (var i = 0;i<contributers.length;i++){ %>
+            <div class="row">
+                <div class="col-md-3">
+                    <img src="<%=contributers[i].image%>" class="img-rounded"  style="width: 30px;height: 30px;">
+                </div>
+                <div class="col-md-4">
+                    <p><%=contributers[i].fname%> <%=contributers[i].lname%></p>
+                </div>
+                <div class="col-md-3">
+                    <p><%=contributers[i].username%></p>
+                </div>
+                <div class="col-md-2">
+                    <button onclick="rating(<%=i%>,<%=contributers.length%>,<%=contributers[i].c_id%>)" type="button" class="btn btn-warning">Feedback</button>
+                </div>
+
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div id="rating<%=i%>">
+
+                    </div>
+                    <!--content on rating.ejs file-->
+
+
+                </div>
+            </div>
+            <br>
+            <%}%>
+        </div>
+
+        <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+    </div>
+
+</div>

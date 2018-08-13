@@ -1,0 +1,31 @@
+<div>
+    <div class="col-md-12">
+
+        <div class="row">
+            <div class="rating">
+                <input type="radio" id="star10" name="rating" value="10" <%if(result[0].value==10){%>checked<%}%> disabled/><label for="star10" title="Rocks!">5 stars</label>
+                <input type="radio" id="star9" name="rating" value="9" <%if(result[0].value==9){%>checked<%}%> disabled/><label for="star9" title="Rocks!">4 stars</label>
+                <input type="radio" id="star8" name="rating" value="8" <%if(result[0].value==8){%>checked<%}%> disabled/><label for="star8" title="Pretty good">3 stars</label>
+                <input type="radio" id="star7" name="rating" value="7" <%if(result[0].value==7){%>checked<%}%> disabled/><label for="star7" title="Pretty good">2 stars</label>
+                <input type="radio" id="star6" name="rating" value="6" <%if(result[0].value==6){%>checked<%}%> disabled/><label for="star6" title="Meh" >1 star</label>
+                <input type="radio" id="star5" name="rating" value="5" <%if(result[0].value==5){%>checked<%}%> disabled/><label for="star5" title="Meh">5 stars</label>
+                <input type="radio" id="star4" name="rating" value="4" <%if(result[0].value==4){%>checked<%}%> disabled/><label for="star4" title="Kinda bad">4 stars</label>
+                <input type="radio" id="star3" name="rating" value="3" <%if(result[0].value==3){%>checked<%}%> disabled/><label for="star3" title="Kinda bad">3 stars</label>
+                <input type="radio" id="star2" name="rating" value="2" <%if(result[0].value==2){%>checked<%}%> disabled/><label for="star2" title="Sucks big tim">2 stars</label>
+                <input type="radio" id="star1" name="rating" value="1" <%if(result[0].value==1){%>checked<%}%> disabled/><label for="star1" title="Sucks big time">1 star</label>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="alert alert-warning">
+                <%=result[0].feedback%>
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+
+</div>

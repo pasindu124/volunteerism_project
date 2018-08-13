@@ -18,111 +18,136 @@
         <div class="tab-pane fade active in" role="tabpanel" id="posts" aria-labelledby="postsTab">
             <div id="posts-container" class="container-fluid container-posts">
 
+                <%for(var i=0;i<eventinfo.length;i++){%>
                 <div class="card-post">
                     <div class="row">
                         <div class="col-xs-3 col-sm-2">
                             <a href="personal-profile.html" title="Profile">
-                                <img src="img/user.jpg" alt="User name" class="img-circle img-user">
+                                <img src="<%=eventinfo[i].image%>" alt="User name" class="img-circle img-user">
                             </a>
                         </div>
                         <div class="col-xs-9 col-sm-10 info-user">
-                            <h3><a href="personal-profile.html" title="Profile">My User</a></h3>
+                            <h3><a href="personal-profile.html" title="Profile"><%= eventinfo[i].username %></a></h3>
                             <p><i>2h</i></p>
                         </div>
                     </div>
                     <div class="row">
+                        <!--<div class="col-sm-8 col-sm-offset-2 data-post">-->
+                            <!--<p>Lorem Ipsum Dolor si amet</p>-->
+                            <!--<div class="reaction">-->
+                                <!--&#x2764; 156 &#x1F603; 54-->
+                            <!--</div>-->
+                            <!--<div class="comments">-->
+                                <!--<div class="more-comments">View more comments</div>-->
+                                <!--<ul>-->
+                                    <!--<li><b>User1</b> Lorem Ipsum Dolor si amet</li>-->
+                                    <!--<li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>-->
+                                <!--</ul>-->
+                                <!--<form>-->
+                                    <!--<input type="text" class="form-control" placeholder="Add a comment">-->
+                                <!--</form>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
                         <div class="col-sm-8 col-sm-offset-2 data-post">
-                            <p>Lorem Ipsum Dolor si amet</p>
-                            <div class="reaction">
-                                &#x2764; 156 &#x1F603; 54
+                            <p class="h2"><%= eventinfo[i].caption %></p>
+                            <p> Date : <%= eventinfo[i].date %> </p>
+                            <p> Time : 21:20</p>
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#eventModal<%= eventinfo[i].e_id %>">View Event</button>
+
+                                </div>
+
+
                             </div>
+                            <div class="reaction">
+                                <div style="display: inline;"><i class="fas fa-heart"></i> </div>
+                                <div style="display: inline;" id="reacts<%= eventinfo[i].e_id %>"> <%= eventinfo[i].contributers %></div>
+                                <div style="display:inline;"><button type="button" onclick="contributers_profile(<%= eventinfo[i].e_id %>)" class="btn btn-default" data-toggle="modal" data-target="#conModel<%= eventinfo[i].e_id %>">CONTRIBUTERS</button></div>
+                            </div>
+
                             <div class="comments">
-                                <div class="more-comments">View more comments</div>
-                                <ul>
-                                    <li><b>User1</b> Lorem Ipsum Dolor si amet</li>
-                                    <li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>
-                                </ul>
+                                <div class="more-comments" id="comments"><a href="#">View more comments</a></div>
+                                <div id="com<%= eventinfo[i].e_id %>">
+                                    <ul>
+                                        <li><b>User1</b> Lorem Ipsum Dolor si amet</li>
+                                        <li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>
+                                    </ul>
+                                </div>
+
+
                                 <form>
-                                    <input type="text" class="form-control" placeholder="Add a comment">
+                                    <input id="inputComment<%= eventinfo[i].e_id %>" type="text" class="form-control" placeholder="Add a comment">
+                                    <script>
+
+                                        document.getElementById('inputComment<%= eventinfo[i].e_id %>').addEventListener('keypress', function(event) {
+                                            if (event.keyCode == 13) {
+                                                var com = document.getElementById('inputComment<%= eventinfo[i].e_id %>').value;
+                                                //console.log(com);
+                                                addComment(com,<%= eventinfo[i].e_id %>);
+                                                document.getElementById('inputComment<%= eventinfo[i].e_id %>').value = ''
+                                                event.preventDefault();
+                                            }
+                                        });
+                                    </script>
                                 </form>
                             </div>
                         </div>
                     </div>
+                </div>
+                <div id="myModal<%= eventinfo[i].e_id %>" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Confirm</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h3>Are you sure to contribute this event?</h3>
+                                <p>Do you want to proceed?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="Contribute(<%= eventinfo[i].e_id %>)" data-dismiss="modal" class="btn btn-primary">Yes</button>
+                                <button type="button"  data-dismiss="modal" aria-hidden="true" class="btn btn-primary">No</button>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="modal fade" id="eventModal<%= eventinfo[i].e_id %>" role="dialog">
+                    <div class="modal-dialog">
+
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title"><%= eventinfo[i].caption %></h4>
+                            </div>
+                            <div class="modal-body">
+                                <p>Some text in the modal.lorem</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div id="conModel<%= eventinfo[i].e_id %>" class="modal fade" role="dialog">
+
+                    <!--content is on the contributers.ejs file-->
                 </div>
 
-                <div class="card-post">
-                    <div class="row">
-                        <div class="col-xs-3 col-sm-2">
-                            <a href="personal-profile.html" title="Profile">
-                                <img src="img/user.jpg" alt="My User" class="img-circle img-user">
-                            </a>
-                        </div>
-                        <div class="col-xs-9 col-sm-10 info-user">
-                            <h3><a href="personal-profile.html" title="Profile">My User</a></h3>
-                            <p><i>2h</i></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class=" col-sm-8 col-sm-offset-2 data-post">
-                            <p>Lorem Ipsum Dolor si amet</p>
-                            <img src="img/post.jpg" alt="image post" class="img-post">
-                            <div class="reaction">
-                                &#x2764; 1234 &#x1F603; 54
-                            </div>
-                            <div class="comments">
-                                <div class="more-comments">View more comments</div>
-                                <ul>
-                                    <li><b>User1</b> Lorem Ipsum Dolor si amet</li>
-                                    <li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>
-                                </ul>
-                                <form>
-                                    <input type="text" class="form-control" placeholder="Add a comment">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <%}%>
 
-                <div class="card-post">
-                    <div class="row">
-                        <div class="col-xs-3 col-sm-2">
-                            <a href="personal-profile.html" title="Profile">
-                                <img src="img/user.jpg" alt="User name" class="img-circle img-user">
-                            </a>
-                        </div>
-                        <div class="col-xs-9 col-sm-10 info-user">
-                            <h3><a href="personal-profile.html" title="Profile">My User</a></h3>
-                            <p><i>2h</i></p>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-sm-8 col-sm-offset-2 data-post">
-                            <p>Lorem Ipsum Dolor si amet</p>
-                            <video controls>
-                                <source src="img/post-video.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <div class="reaction">
-                                &#x2764; 1234 &#x1F603; 54
-                            </div>
-                            <div class="comments">
-                                <div class="more-comments">View more comments</div>
-                                <ul>
-                                    <li><b>User1</b> Lorem Ipsum Dolor si amet</li>
-                                    <li><b>User2</b> Lorem Ipsum Dolor si amet &#x1F602;</li>
-                                </ul>
-                                <form>
-                                    <input type="text" class="form-control" placeholder="Add a comment">
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
-            <div id="loading">
-                <img src="img/load.gif" alt="loader">
-            </div>
+
+
         </div><!-- end Tab Posts -->
 
         <!--Start Tab Profile-->

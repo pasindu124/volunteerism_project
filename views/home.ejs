@@ -100,27 +100,27 @@
                     </div>
                 </div>
                 <div id="myModal<%= evtlocations[i].e_id %>" class="modal fade" role="dialog">
-                <div class="modal-dialog">
+                    <div class="modal-dialog">
 
-                    <!-- Modal content-->
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                            <h4 class="modal-title">Confirm</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h3>Are you sure to contribute this event?</h3>
-                            <p>Do you want to proceed?</p>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" onclick="Contribute(<%= evtlocations[i].e_id %>)" data-dismiss="modal" class="btn btn-primary">Yes</button>
-                            <button type="button"  data-dismiss="modal" aria-hidden="true" class="btn btn-primary">No</button>
+                        <!-- Modal content-->
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                                <h4 class="modal-title">Confirm</h4>
+                            </div>
+                            <div class="modal-body">
+                                <h3>Are you sure to contribute this event?</h3>
+                                <p>Do you want to proceed?</p>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" onclick="Contribute(<%= evtlocations[i].e_id %>)" data-dismiss="modal" class="btn btn-primary">Yes</button>
+                                <button type="button"  data-dismiss="modal" aria-hidden="true" class="btn btn-primary">No</button>
 
+                            </div>
                         </div>
-                    </div>
 
                 </div>
-            </div>
+                </div>
                 <div class="modal fade" id="eventModal<%= evtlocations[i].e_id %>" role="dialog">
                     <div class="modal-dialog">
 
@@ -149,7 +149,7 @@
 
 
 
-            <%for (var i=0;i<evtlocations.length-1;i++){ %>
+            <%for (var i=0;i<evtlocations.length;i++){ %>
                 <script>
                     showComments(<%= evtlocations[i].e_id %>);
 
