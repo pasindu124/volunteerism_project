@@ -24,6 +24,7 @@ router.get('/signup',isAuthent(), function(req, res, next) {
 router.get('/home',isAuthen(), function(req, res, next) {
     var sucess = req.query['sucess'];
     var errors = req.query['errors'];
+
     const id = req.user['user_id'];
     db.query("SELECT * FROM user WHERE id= ?",[id],function (err,result,field) {
         if(err) throw err;
@@ -32,6 +33,29 @@ router.get('/home',isAuthen(), function(req, res, next) {
             if(err) throw err;
             var query1=db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1;",function (err,evtlocations,field) {
                 if(err) throw err;
+
+                async function getComments(evtlocations) {
+                    var comments =[];
+                    for (var i=0;i<evtlocations.length;i++){
+                        db.query("SELECT * FROM `comment` LEFT JOIN user ON comment.com_uid=user.id WHERE `com_eid`=? AND comment.c_status=1 ORDER BY `comment`.`com_id` DESC",[evtlocations[i].e_id],function (err,comment,field) {
+                            if (err) throw err;
+
+                            comments.push(comment);
+
+                        });
+                    }
+                    console.log(comments);
+                    return comments;
+                }
+
+                getComments(evtlocations).then(comments => {
+                    console.log(comments);
+                })
+
+
+
+
+
 
                 if(errors){
                     var array = JSON.parse(errors);
@@ -359,7 +383,7 @@ router.post('/addEvent',function (req,res,next) {
     var errors = req.validationErrors();
 
     if(errors){
-        //console.log(errors);
+
         var err= JSON.stringify(errors);
         var string= "?errors="+err;
         res.redirect('/home' + string);
@@ -376,6 +400,65 @@ router.post('/addEvent',function (req,res,next) {
     }
 
 });
+
+router.get('/contribute',function (req,res,next) {
+    var eid = req.query['eid'];
+    var uid = req.user['user_id'];
+    db.query('INSERT INTO `contribute` (`c_uid`, `c_eid`) VALUES ( ? , ?)',[uid,eid],function (error,result,field) {
+        if(error) throw error;
+        db.query('UPDATE `event` SET `contributers` = `contributers`+1 WHERE `event`.`e_id` = ?',[eid],function (err,result1,field1) {
+            if(err) throw err;
+            db.query('SELECT `contributers` FROM `event` WHERE `e_id`=?',[eid],function (error,result2,field3) {
+                if(error) throw error;
+                res.send(JSON.stringify(result2[0].contributers))
+            })
+        })
+
+    })
+});
+
+router.get('/contributers',function (req,res,next) {
+    var eid= req.query['eid'];
+    //console.log(eid);
+    db.query('SELECT * FROM `contribute` LEFT JOIN user ON contribute.c_uid= user.id WHERE contribute.c_eid=?',[eid],function (err,result,field) {
+        if(err) throw err;
+
+        res.render('contributers',{title: eid,contributers:result})
+
+    })
+});
+
+router.get('/addComment',function (req,res,next) {
+    //console.log(req.query);
+    var eid = req.query['eid'];
+    var uid = req.user['user_id'];
+    var comment = req.query['comment'];
+
+    db.query('INSERT INTO `comment` (`com_eid`, `com_uid`, `comment`) VALUES (?, ?, ? )',[eid,uid,comment],function (err,result,field) {
+        if(err) throw err;
+        db.query('SELECT * FROM `comment` LEFT JOIN user ON comment.com_uid=user.id WHERE `com_eid` = ? AND comment.c_status=1 ORDER BY `comment`.`com_id` DESC LIMIT 2',[eid],function (err,result1,field1) {
+            if(err) throw err;
+            res.render('comments',{comments:result1})
+
+        })
+    })
+
+
+
+});
+
+router.get('/showComment',function (req,res,next) {
+    console.log(req.query);
+    var eid = req.query['eid'];
+
+    db.query('SELECT * FROM `comment` LEFT JOIN user ON comment.com_uid=user.id WHERE `com_eid` = ? AND comment.c_status=1 ORDER BY `comment`.`com_id` DESC LIMIT 2',[eid],function (err,result1,field1) {
+        if(err) throw err;
+        res.render('comments',{comments:result1})
+
+    })
+
+})
+
 
 
 passport.serializeUser(function(user_id, done) {

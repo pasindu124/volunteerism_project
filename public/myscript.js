@@ -58,6 +58,80 @@ function addAdmin() {
     ajaxRequest.send(null);
 }
 
+function Contribute(id) {
+    var event_id = id;
+    //console.log(event_id)
+    var ajaxRequest;
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('reacts'+event_id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?eid="+event_id;
+    ajaxRequest.open("GET", "/contribute" +queryString , true);
+    ajaxRequest.send(null);
+}
+
+function contributers(id) {
+    var event_id = id;
+    //console.log(id);
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('conModel'+event_id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?eid="+event_id;
+    ajaxRequest.open("GET", "/contributers" +queryString , true);
+    ajaxRequest.send(null);
+}
+
+function addComment(com,eid) {
+    var comment = com;
+    var event_id = eid;
+    //console.log(com);
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('com'+event_id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+
+    var queryString = "?comment="+comment+"&eid="+event_id;
+    ajaxRequest.open("GET", "/addComment" +queryString , true);
+    ajaxRequest.send(null);
+}
+
+function showComments(eid) {
+
+    var event_id = eid;
+    console.log(event_id);
+
+    ajaxRequest=checkBrowser();
+    ajaxRequest.onreadystatechange = function() {
+        if(ajaxRequest.readyState == 4) {
+            var ajaxDisplay = document.getElementById('com'+event_id);
+            ajaxDisplay.innerHTML = ajaxRequest.responseText;
+        }
+    }
+
+    var queryString = "?eid="+event_id;
+    console.log(queryString);
+    ajaxRequest.open("GET", "/showComment" +queryString , true);
+    ajaxRequest.send(null);
+
+
+}
+
 function empty() {
     var x;
     x = document.getElementById("username").value;
