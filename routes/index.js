@@ -115,8 +115,21 @@ router.get('/profile',isAuthen(), function(req, res, next) {
 
             var query2 = db.query("SELECT * FROM `event` LEFT JOIN user ON event.u_id= user.id LEFT JOIN organization ON event.o_id=organization.o_id WHERE event.status=1 AND event.u_id=?;",[id],function (err,eventinfo,field) {
                 if(err) throw err;
-                console.log(query2.sql)
-                res.render('profile', { title: 'Profile' ,result:result,rows:rows,eventinfo:eventinfo });
+                //console.log(query2.sql)
+
+                var query3 = db.query("SELECT * FROM `contribute` LEFT JOIN event ON contribute.c_eid=event.e_id LEFT JOIN user ON event.u_id = user.id WHERE contribute.status=1 AND contribute.c_uid=?",[id],function (err,rateinfo,field) {
+                    if(err)throw err;
+
+                    var query4 = db.query('SELECT SUM(contribute.value)/COUNT(*) AS average FROM `contribute` WHERE contribute.status=1 AND contribute.c_uid=?',[id],function (err,average,field) {
+                        if(err) throw err;
+                        console.log(average)
+                        res.render('profile', { title: 'Profile' ,result:result,rows:rows,eventinfo:eventinfo,rateinfo:rateinfo, average:average });
+
+                    })
+
+                })
+
+
 
 
             })

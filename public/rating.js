@@ -1,26 +1,21 @@
-jQuery(document).ready(function($){
+var $star_rating = $('.star-rating .fa');
 
-    $(".btnrating").on('click',(function(e) {
-
-        var previous_value = $("#selected_rating").val();
-
-        var selected_value = $(this).attr("data-attr");
-        $("#selected_rating").val(selected_value);
-
-        $(".selected-rating").empty();
-        $(".selected-rating").html(selected_value);
-
-        for (i = 1; i <= selected_value; ++i) {
-            $("#rating-star-"+i).toggleClass('btn-warning');
-            $("#rating-star-"+i).toggleClass('btn-default');
+var SetRatingStar = function() {
+    return $star_rating.each(function() {
+        if (parseInt($star_rating.siblings('input.rating-value').val()) >= parseInt($(this).data('rating'))) {
+            return $(this).removeClass('fa-star-o').addClass('fa-star');
+        } else {
+            return $(this).removeClass('fa-star').addClass('fa-star-o');
         }
+    });
+};
 
-        for (ix = 1; ix <= previous_value; ++ix) {
-            $("#rating-star-"+ix).toggleClass('btn-warning');
-            $("#rating-star-"+ix).toggleClass('btn-default');
-        }
+$star_rating.on('click', function() {
+    $star_rating.siblings('input.rating-value').val($(this).data('rating'));
+    return SetRatingStar();
+});
 
-    }));
-
+SetRatingStar();
+$(document).ready(function() {
 
 });

@@ -8,7 +8,7 @@
     <ul class="nav nav-tabs" role="tablist">
         <li class="active"><a href="#posts" role="tab" id="postsTab" data-toggle="tab" aria-controls="posts" aria-expanded="true">Last posts</a></li>
         <li><a href="#profile" role="tab" id="profileTab" data-toggle="tab" aria-controls="profile" aria-expanded="true">Profile</a></li>
-        <li><a href="#chat" role="tab" id="chatTab" data-toggle="tab" aria-controls="chat" aria-expanded="true">Chat</a></li>
+        <li><a href="#chat" role="tab" id="chatTab" data-toggle="tab" aria-controls="chat" aria-expanded="true">My Contributions</a></li>
     </ul>
 
     <!--Start Tab Content-->
@@ -316,59 +316,85 @@
         <div class="tab-pane fade" role="tabpanel" id="chat" aria-labelledby="chatTab">
             <div class="container-fluid container-posts">
                 <div class="card-post">
+                    <div>
+                        <p><%=average[0].average%></p>
+                        <p><%= Math.round(average[0].average)%></p>
+
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <div class="star-rating">
+                                    <%for(var j=0;j<Math.round(average[0].average);j++){%>
+                                    <span class="fa fa-star fa-3x" data-rating="1"></span>
+                                    <%}%>
+                                    <%for(var j=Math.round(average[0].average);j<10;j++){%>
+                                    <span class="far fa-star fa-3x" data-rating="1"></span>
+                                    <%}%>
+
+
+                                    <input type="hidden" name="whatever3" class="rating-value" value="4.1">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid container-posts">
+                <div class="card-post">
                     <div class="scrollbar-container">
+                        <%for(var i=0;i<rateinfo.length;i++){%>
                         <div class="row row-user-list">
                             <div class="col-sm-2 col-xs-3">
-                                <img src="img/user2.jpg" alt="User name" class="img-circle img-user">
+                                <img src="<%=rateinfo[i].image%>" alt="User name" class="img-circle img-user">
                             </div>
                             <div class="col-sm-7 col-xs-9">
-                                <p><b>User Name</b> <span class="badge">1</span></p>
-                                <p class="chat-time">An hour ago</p>
-                                <p>Lorem ipsum</p>
+                                <p><b><%=rateinfo[i].caption%></b> <span class="badge">1</span></p>
+                                <p class="chat-time"><%=rateinfo[i].username%></p>
+                                <p><%=rateinfo[i].value%></p>
+                                <div>
+                                    <div class="container">
+
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <div class="star-rating">
+                                                    <%for(var j=0;j<rateinfo[i].value;j++){%>
+                                                        <span class="fa fa-star" data-rating="1"></span>
+                                                    <%}%>
+                                                    <%for(var j=rateinfo[i].value;j<10;j++){%>
+                                                    <span class="far fa-star" data-rating="1"></span>
+                                                    <%}%>
+
+
+                                                    <input type="hidden" name="whatever3" class="rating-value" value="4.1">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="alert alert-warning">
+                                    <%=rateinfo[i].feedback%>
+                                </div>
                             </div>
                             <div class="col-sm-3 hidden-xs">
-                                <p><a href="#" title="Replay"><span class="badge badge-replay">Replay ></span></a></p>
+                                <p><a href="#" title="Replay"><span class="badge badge-message"><%=rateinfo[i].date%> ></span></a></p>
                             </div>
                         </div>
-                        <div class="row row-user-list">
-                            <div class="col-sm-2 col-xs-3">
-                                <img src="img/user3.jpg" alt="User name" class="img-circle img-user">
-                            </div>
-                            <div class="col-sm-7 col-xs-9">
-                                <p><b>User Name</b></p>
-                                <p class="chat-time">Yesterday</p>
-                                <p>Lorem ipsum</p>
-                            </div>
-                            <div class="col-sm-3 hidden-xs">
-                                <p><a href="#" title="Start chat"><span class="badge badge-message">Start chat ></span></a></p>
-                            </div>
-                        </div>
-                        <div class="row row-user-list">
-                            <div class="col-sm-2 col-xs-3">
-                                <img src="img/user4.jpg" alt="User name" class="img-circle img-user">
-                            </div>
-                            <div class="col-sm-7 col-xs-9">
-                                <p><b>User Name</b></p>
-                                <p class="chat-time">2 days ago</p>
-                                <p>Lorem ipsum</p>
-                            </div>
-                            <div class="col-sm-3 hidden-xs">
-                                <p><a href="#" title="Start chat"><span class="badge badge-message">Start chat ></span></a></p>
-                            </div>
-                        </div>
-                        <div class="row row-user-list">
-                            <div class="col-sm-2 col-xs-3">
-                                <img src="img/user5.jpg" alt="User name" class="img-circle img-user">
-                            </div>
-                            <div class="col-sm-7 col-xs-9">
-                                <p><b>User Name</b></p>
-                                <p class="chat-time">2 days ago</p>
-                                <p>Lorem ipsum</p>
-                            </div>
-                            <div class="col-sm-3 hidden-xs">
-                                <p><a href="#" title="Start chat"><span class="badge badge-message">Start chat ></span></a></p>
-                            </div>
-                        </div>
+
+                        <%}%>
+                        <!--<div class="row row-user-list">-->
+                            <!--<div class="col-sm-2 col-xs-3">-->
+                                <!--<img src="img/user2.jpg" alt="User name" class="img-circle img-user">-->
+                            <!--</div>-->
+                            <!--<div class="col-sm-7 col-xs-9">-->
+                                <!--<p><b>Event Title</b> <span class="badge">1</span></p>-->
+                                <!--<p class="chat-time">UserName</p>-->
+                                <!--<p>rating</p>-->
+                                <!--<p>Comment</p>-->
+                            <!--</div>-->
+                            <!--<div class="col-sm-3 hidden-xs">-->
+                                <!--<p><a href="#" title="Replay"><span class="badge badge-message">Date ></span></a></p>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
                     </div>
                 </div>
             </div>
